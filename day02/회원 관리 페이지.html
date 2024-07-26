@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        table, td, th, tr {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        td, th {
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .saveBtn {
+            width: 100px;
+            height: 30px;
+            background-color: rgb(180, 180, 180);
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            box-shadow: 1px 1px 2px;
+        }
+        .element {
+            border: 2px solid rgba(100, 100, 100, 1);
+            border-radius: 4px;
+            background-color: rgba(247, 203, 203, 0.5);
+            box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.77);
+            text-shadow: 4px 2px 4px rgba(0, 0, 0, 0.3);
+            padding: 10px 0px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <h1 class="element">회원 관리 페이지</h1>
+        </div>
+        <div>
+            <form action="">
+                <label for="name">이름</label>
+                <input type="text" name="" id="name" placeholder="성명을 입력 하세요">
+                <br>
+                <label for="dept">부서</label></th>
+                <input type="text" name="" id="dept" placeholder="부서를 입력 하세요">
+                <br>
+                <label for="rank">직책</label>
+                <input type="text" name="" id="rank" placeholder="직책을 입력 하세요">
+                <br>
+                <label for="gender">성별</label>
+                <input type="radio" name="gender" id="gender"> 남성
+                <input type="radio" name="gender" id="gender" checked> 여성
+                <input type="radio" name="gender" id="gender"> 기타
+                <br>
+                <label for="favorit">관심</label>
+                <input type="checkbox" name="favorit" id="favorit" value="sw개발" checked> SW개발
+                <input type="checkbox" name="favorit" id="favorit" value="영업"> 영업
+                <input type="checkbox" name="favorit" id="favorit" value="독서"> 독서
+                <input type="checkbox" name="favorit" id="favorit" value="직업교육"> 직업교육
+                <br>
+                <label for="photo">사진</label>
+                <input type="file" name="" id="photo">
+                <br>
+
+                <input type="submit" class="saveBtn" value="추가">
+            </form>
+        </div>
+        <hr>
+        <table border="1" border-collapse:>
+            <tr style="background-color: pink;">
+                <td><input type="checkbox" name="" id=""></td>
+                <th>번호</th>
+                <th colspan="3">사진</th>
+                <th>사원명</th>
+                <th>부서</th>
+                <th>직급</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr>
+                <td rowspan="5"><input type="checkbox" name="" id=""></td>
+                <td rowspan="5">1043</td>
+                <td colspan="3">
+                    <img src="cat.jpg">
+                </td>
+                <td>김민지</td>
+                <td>개발</td>
+                <td>인턴</td>
+                <td rowspan="5"><input type="button" value="edit"></td>
+                <td rowspan="5"><input type="button" value="delete"></td>
+            </tr>
+            <tr>
+                <th>번호</th>
+                <th>댓글</th>
+                <th>내용</th>
+                <th>작성자</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>멋진</td>
+                <td>사진입니다</td>
+                <td>박문수</td>
+                <td>수정</td>
+                <td>삭제</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>좋아요^^</td>
+                <td>퍼가요~</td>
+                <td>일지매</td>
+                <td>수정</td>
+                <td>삭제</td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    댓글 <input type="text" name="" id="">
+                    작성자 <input type="text" name="" id="">
+                    <input type="button" value="댓글입력">
+                </td>
+            </tr>
+        </table>
+</body>
+
+</html>
