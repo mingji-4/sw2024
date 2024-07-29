@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList</title>
+    <link rel="stylesheet" href="basic.css">
+    <link rel="stylesheet" href="todo.css">
+    <style>
+        @import url(//fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+    </style>
+</head>
+<body>
+    <div id="container">
+        <header id="header">
+            <nav class="menu">
+                <ul>
+                    <li><a href="home.html" target="main">Home</a></li>
+                    <li><a href="myinfo.html" target="main">Myinfo</a></li>
+                    <li><a href="gallery.html" target="main"> Gallery</a></li>
+                    <li><a href="study.html" target="main">Study</a></li>
+                    <li><a href="todolist.html" target="main">TodoList</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="list">
+            <div class="todolist">
+                <div class="inputField">
+                    <input type="text" id="addValue" placeholder="할 일 추가하기" autofocus />
+                    <button type="button" id="btn" onclick="addTodo()"></button>
+                </div>
+                <div>
+                    <ul id="addTodo" class="Todolist">
+                        <li>
+                            <div id='result'></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="todo.js"></script>
+</body>
+</html>
