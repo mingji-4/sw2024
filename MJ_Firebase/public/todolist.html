@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
         @import url(//fonts.googleapis.com/earlyaccess/nanumpenscript.css);
     </style>
 </head>
+
 <body>
     <div id="container">
         <header id="header">
@@ -25,20 +27,31 @@
         </header>
         <div class="list">
             <div class="todolist">
-                <div class="inputField">
-                    <input type="text" id="addValue" placeholder="할 일 추가하기" autofocus />
-                    <button type="button" id="btn" onclick="addTodo()"></button>
-                </div>
-                <div>
-                    <ul id="addTodo" class="Todolist">
-                        <li>
-                            <div id='result'></div>
-                        </li>
-                    </ul>
-                </div>
+                <h1>Todo List</h1>
+                메모: <input type="text" id="memoTxt" value="">
+                <button type="button" id="clickBtn">Save</button>
+                <button type="button" id="resetBtn">Reset</button>
+                <br>
+                검색: <input type="text" id="searchTxt">
+                <button id="searchBtn">검색</button>
+                <hr>
+                <table width="550" border="1">
+                    <thead>
+                        <tr>
+                            <th>확인</th>
+                            <th>할일</th>
+                            <th>수정</th>
+                            <th>삭제</th>
+                        </tr>
+                    </thead>
+                    <tbody id="demo">
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     <script src="todo.js"></script>
 </body>
+
 </html>
