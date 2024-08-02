@@ -6,7 +6,7 @@
     <title>회원 관리 페이지</title>
     <!-- 인터널 방식(내부 설정 방식) -->
     <style>
-        .saveBtn {
+        #saveBtn {
             width:100px; 
             height: 30px; 
             background-color: red; 
@@ -42,10 +42,24 @@
             border-top: 0 solid black;
             border-bottom: 1 solid black;
         }
+        .subTbl tr th {
+            border-left: 0 solid black;
+            border-right: 0 solid black;
+            border-top: 0 solid black;
+            border-bottom: 1 solid black;
+        }
+        .subTblComment {
+            width: 15%;
+            transition: 0.4s cubic-bezier(0,.64,1,.62);
+        }
         div.container {
             margin: auto;
             max-width: 800px;
             min-width: 600px;
+        }
+
+        td.editContent, td.editWho {
+            display: none;
         }
     </style>
 </head>
@@ -57,7 +71,7 @@
         </div>
         <div>
             <!-- 입력 폼 -->
-             <form action="" method="post">
+             <form action="" id="memberForm">
                 <table>
                     <tr>
                         <th><label for="name">이름</label></th>
@@ -66,18 +80,18 @@
                     </tr>
                     <tr>
                         <th><label for="dept">부서</label></th>
-                        <td><input type="text" name="name" id="dept" value="경영지원"></td>
+                        <td><input type="text" name="dept" id="dept" value="경영지원"></td>
                     </tr>
                     <tr>
                         <th><label for="rank">직책</label></th>
-                        <td><input type="text" name="name" id="rank" value="과장"></td>
+                        <td><input type="text" name="rank" id="rank" value="과장"></td>
                     </tr>
                     <tr>
-                        <th><label for="gender">성별</label></th>
+                        <th>성별</th>
                         <td>
-                            <input type="radio" name="gender" id="gender"> 남성
-                            <input type="radio" name="gender" id="gender" checked> 여성
-                            <input type="radio" name="gender" id="gender"> 기타
+                            <input type="radio" name="gender" id=""> 남성
+                            <input type="radio" name="gender" id="" checked> 여성
+                            <input type="radio" name="gender" id=""> 기타
                         </td>
                     </tr>
                     <tr>
@@ -99,7 +113,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <input type="submit" class="saveBtn" value="SAVE" style="">
+                            <input type="submit" id="saveBtn" value="SAVE">
                         </td>
                     </tr>
                 </table>
@@ -111,68 +125,253 @@
             <p>
                 검색 <input type="text"> <button>검색</button>
             </p>
-            <table class="memListTbl">
-                <tr>
-                    <th>
-                        <input type="checkbox" name="" id="">
-                    </th>
-                    <th>번호</th>
-                    <th>사진</th>
-                    <th>사원명</th>
-                    <th>부서</th>
-                    <th>직급</th>
-                    <th>수정</th>
-                    <th>삭제</th>
-                </tr>
-                <tr>
-                    <td rowspan="2"><input type="checkbox" name="" id=""></td>
-                    <td rowspan="2">1043</td>
-                    <td>
-                        <img src="img/img01.png" alt="사원1의 사진">
-                    </td>
-                    <td>홍길동</td>
-                    <td>개발</td>
-                    <td>대리</td>
-                    <td rowspan="2"><button>Edit</button></td>
-                    <td rowspan="2"><button>Delete</button></td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <table class="subTbl" width="100%" cellspacing="0">
-                            <tr>
-                                <td width="10px">번호</td>
-                                <td>댓글내용</td>
-                                <td>작성자</td>
-                                <td>수정</td>
-                                <td>삭제</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>멋진 사진입니다.</td>
-                                <td>박문수</td>
-                                <td>수정</td>
-                                <td>삭제</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>좋아요^^ 퍼가요~</td>
-                                <td>일지매</td>
-                                <td>수정</td>
-                                <td>삭제</td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    댓글 <input type="text">
-                                    작성자 <input type="text">
-                                    <button>댓글입력</button>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+            <table class="memListTbl" id="memListTbl">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" name="" id="">
+                        </th>
+                        <th>번호</th>
+                        <th>사진</th>
+                        <th>사원명</th>
+                        <th>부서</th>
+                        <th>직급</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="memList">
+                    <!-- 이 부분에 새로운 사원이 추가된다. -->
+                </tbody>
             </table>
-            <copy>(c) Comstudy school</copy>
         </div>
     </div>
+                
+
+    </table>
+    <copy>(c) Comstudy school</copy>
+    </div>
+
+    <script>
+        var members = []; // 속성: no, name, dept, rank
+        var comments = []; // 속성: 배열(속성: no, content, who)
+
+        var memberForm = document.getElementById('memberForm');
+        var saveBtn = document.getElementById('saveBtn');
+
+        var memListTbl = document.getElementById('memListTbl');
+        var memList = document.getElementById('memList');
+        
+        var listNumber = 1;
+
+        drawList();
+
+        function drawList() { //멤버창 새로고침 메서드
+            memList.innerHTML=''; //테이블의 HTML을 전부 제거(초기화)한다.
+
+            //members 배열의 각 요소를 memObj로 지정하고 반복한다.
+            members.forEach(function(memObj) {
+                // 이 부분은 댓글의 HTML 태그를 생성한다. comments의 요소 배열의 요소 하나 당 한 번 실행된다.
+                var idx = memberIndex(memObj.no);
+                var innerComment = comments[idx]; // 먼저 이 댓글창이 몇번째 멤버(memObj.no)의 댓글창인지 체크하여 comments의 몇 번째 요소 배열을 사용할 것인지 결정하고 해당 요소 배열을 innerComment에 저장한다.
+                var innerCommentHTML = ''; // 이 댓글창의 HTML을 전부 제거(초기화)한다.
+                if (innerComment) { //만약 innerComment이 존재할 경우, 즉 댓글이 하나라도 있을 경우
+                    innerComment.forEach(function(comObj) { //innerComment 배열의 각 요소를 comObj로 지정하고 반복한다.
+                        innerCommentHTML += // 댓글창의 댓글을 comObj의 속성에 따라 추가한다.
+                        `<tr>
+                            <td>${comObj.no}</td>
+                            <td class="titleContent">${comObj.content}</td>
+                            <td class="titleWho">${comObj.who}</td>
+                            <td><button onclick="editCommentBtnHandler(this, ${memObj.no}, ${comObj.no})">수정</button></td>
+                            <td><button onclick="deleteCommentBtnHandler(${memObj.no}, ${comObj.no})">삭제</button></td>
+                        </tr>
+                        `;
+                    });
+                }
+
+                // 이 부분은 멤버의 HTML태그를 생성한다. members의 요소 하나 당 한 번 실행된다.
+                memList.innerHTML += //멤버창의 멤버를 memObj의 속성에 따라 추가한다.
+                `
+                <div id="member${memObj.no}">
+                    <tr>
+                        <td rowspan="2"><input type="checkbox" name="" id=""></td>
+                        <td rowspan="2">${memObj.no}</td>
+                        <td>
+                            <!-- <img src="img/img01.png" alt="사원${memObj.no}의 사진"> -->
+                            사원 ${memObj.no}의 사진
+                        </td>
+                        <td class="memberName">${memObj.name}</td>
+                        <td class="memberDept">${memObj.dept}</td>
+                        <td class="memberRank">${memObj.rank}</td>
+                        <td rowspan="2"><button onclick="editMemberBtnHandler(this, ${memObj.no})">Edit</button></td>
+                        <td rowspan="2"><button onclick="deleteMemberBtnHandler(this, ${memObj.no})">Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <table class="subTbl" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th width="50px">번호</th>
+                                        <th>댓글 내용</th>
+                                        <th>작성자</th>
+                                        <th>수정</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="subTblComment" id="subTblComment${memObj.no}">
+                                    ${innerCommentHTML}
+                                </tbody>
+                                <tr>
+                                    <td colspan="5">
+                                        댓글 : <input type="text" class="comment">
+                                        작성자 : <input type="text" class="writer">
+                                        <button onclick="addCommentBtnHandler(this, ${memObj.no})">댓글입력</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </div>
+                `;
+            });
+        }
+
+        function addCommentBtnHandler(btn, memNo) { // 이 부분은 댓글 추가 버튼을 눌렀을 때 작동한다.
+            var tdElement = btn.parentElement;
+            var comment = tdElement.querySelector(".comment");
+            var writer = tdElement.querySelector(".writer");
+
+            addComment(comment.value, writer.value, memNo); // 입력한 값을 배열에 추가한다.
+        }
+
+        function addComment(comment, writer, memNo) {
+            var idx = memberIndex(memNo);
+            var length = comments[idx].length;
+            if(length == 0) {
+                comments[idx].push({no:1, content:comment, who:writer});
+            } else {
+                comments[idx].push({no:comments[idx][length-1].no+1, content:comment, who:writer});
+            }
+            drawList(); //멤버 목록 새로고침
+        }
+
+        function deleteCommentBtnHandler(memNo, comNo) { //이 부분은 댓글 삭제 버튼을 눌렀을 때 작동한다.
+            console.log(memNo, comNo);
+            var idx = memberIndex(memNo);
+            var comIdx = commentIndex(memNo, comNo);
+            comments[idx].splice(comIdx, 1);
+            drawList(); //멤버 목록 새로고침
+        }
+
+        function editCommentBtnHandler(btn, memNo, comNo) { // 이 부분은 댓글 수정 버튼을 눌렀을 때 작동한다.
+            var trElement = btn.parentElement.parentElement;
+            var titleContent = trElement.querySelector(".titleContent");
+            var titleWho = trElement.querySelector(".titleWho");
+            var idx = memberIndex(memNo);
+            var comIdx = commentIndex(memNo, comNo);
+            var comment = comments[idx][comIdx];
+
+            titleContent.innerHTML = `<input type="text" value="${comment.content}" class="editContent">`;
+            titleWho.innerHTML = `<input type="text" value="${comment.who}" class="editWho">`;
+
+            var editContent = trElement.querySelector(".editContent");
+            var editWho = trElement.querySelector(".editWho");
+
+            editContent.addEventListener('keyup', function(event) { //엔터키를 누르면 다음 input으로 넘어간다.
+                if(event.keyCode === 13) {
+                    editWho.focus();
+                }
+            });
+            editWho.addEventListener('keyup', function(event) { //엔터키를 누르면 댓글 배열의 멤버 인덱스의 배열의 값을 수정하고 목록을 새로고침한다.
+                if(event.keyCode === 13) {
+                    comment.content = editContent.value;
+                    comment.who = editWho.value;
+                    drawList();
+                }
+            });
+        }
+
+        function editMemberBtnHandler(btn, memNo) { // 이 부분은 멤버 수정 버튼을 눌렀을 때 작동한다. 원리는 댓글 수정 버튼을 눌렀을 때의 원리와 동일하다.
+            var trElement = btn.parentElement.parentElement;
+            var memberName = trElement.querySelector(".memberName");
+            var memberDept = trElement.querySelector(".memberDept");
+            var memberRank = trElement.querySelector(".memberRank");
+
+            var idx = memberIndex(memNo);
+
+            memberName.innerHTML = `<input type="text" value="${members[idx].name}" class="editName">`;
+            memberDept.innerHTML = `<input type="text" value="${members[idx].dept}" class="editDept">`;
+            memberRank.innerHTML = `<input type="text" value="${members[idx].rank}" class="editRank">`;
+
+            var editName = trElement.querySelector(".editName");
+            var editDept = trElement.querySelector(".editDept");
+            var editRank = trElement.querySelector(".editRank");
+
+            editName.addEventListener('keyup', function(event) { //엔터키를 누르면 다음 input으로 넘어간다.
+                if(event.keyCode === 13) {
+                    editDept.focus();
+                }
+            });
+            editDept.addEventListener('keyup', function(event) { //엔터키를 누르면 다음 input으로 넘어간다.
+                if(event.keyCode === 13) {
+                    editRank.focus();
+                }
+            });
+            editRank.addEventListener('keyup', function(event) { //엔터키를 누르면 멤버 배열의 값을 수정하고 목록을 새로고침한다.
+                if(event.keyCode === 13) {
+                    members[idx].name = editName.value;
+                    members[idx].dept = editDept.value;
+                    members[idx].rank = editRank.value;
+                    drawList();
+                }
+            });
+        }
+
+        function deleteMemberBtnHandler(btn, memNo) { // 이 부분은 멤버 삭제 버튼을 눌렀을 때 작동한다. 원리는 댓글 삭제 버튼을 눌렀을 때의 원리와 동일하다.
+            var idx = memberIndex(memNo);
+            members.splice(idx, 1);
+            comments.splice(idx, 1);
+            drawList();
+        }
+
+        function memberIndex(memNo) {
+            return members.findIndex(function(mem) {
+                return mem.no == memNo;
+            });
+        }
+
+        function commentIndex(memNo, comNo) {
+            var idx = memberIndex(memNo);
+            return comments[idx].findIndex(function(com) {
+                return com.no == comNo;
+            });
+        }
+
+        saveBtn.onclick = function(event) {
+            event.preventDefault();
+            if(memberForm.name.value == '') {
+                alert('이름이 비었습니다.');
+                memberForm.name.focus();
+                return;
+            }
+            if(memberForm.dept.value == '') {
+                alert('부서가 비었습니다.');
+                memberForm.dept.focus();
+                return;
+            }
+            if(memberForm.rank.value == '') {
+                alert('직책이 비었습니다.');
+                memberForm.rank.focus();
+                return;
+            }
+
+            members.push({no:listNumber, name:memberForm.name.value , dept:memberForm.dept.value , rank:memberForm.rank.value});
+            comments.push([]);
+            listNumber++;
+            //모든 유효성 검사가 통과되면 전송
+            drawList();
+        }
+
+    </script>
 </body>
 </html>
