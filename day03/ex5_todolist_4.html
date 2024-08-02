@@ -27,11 +27,11 @@
 
             // 함수 선언
             HTMLButtonElement.prototype.handleDelEvt = function (btn) {
-                //console.dir(btn);
+                // console.dir(btn);
                 // 트래버싱으로 상대적인 요소 찾기
                 var trElement = btn.parentElement.parentElement;
-                //console.log('handleDelEvt 호출 ...', btn.dataset.seq);
-                //console.log('handleDelEvt 호출 ...', trElement.dataset.seq);
+                // console.log('handleDelEvt 호출 ...', btn.dataset.seq);
+                // console.log('handleDelEvt 호출 ...', trElement.dataset.seq);
                 var targetSeq = trElement.dataset.seq;
 
                 var idx = todoList.findIndex(function(todo) {
@@ -138,9 +138,9 @@
             }
         }
 
-        // localStorage.setItem("todoList", JSON.stringify(todoList));
-        // var loadTodoList = JSON.parse( localStorage.getItem("todoList") );
-        // console.log(loadTodoList);
+        localStorage.setItem("todoList", JSON.stringify(todoList));
+        var loadTodoList = JSON.parse( localStorage.getItem("todoList") );
+        console.log(loadTodoList);
     </script>
 </head>
 <body>
