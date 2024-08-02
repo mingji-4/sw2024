@@ -88,7 +88,7 @@ app.get('/saram/saramForm', function(req, res) {
 })
 
 app.get('/saram/add', function(req, res) {
-  console.log('GET - /saram/add >>>> no: ' + req.query.no); //req.query.no = ?no=번호 에서 번호가 된다.
+  console.log("GET - /saram/add >>>> no: " + req.query.no);
   var saram = req.query;
   saramList.push(saram);
   res.redirect('/saram');
