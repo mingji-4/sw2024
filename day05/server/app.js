@@ -61,9 +61,38 @@ app.get('/saram/edit', function(req, res) {
 });
 
 app.get('saram/update', function(req, res) {
-  console.log("GET - /saram/update >>> ", req.query);
-  res.send(req.query);
+  console.log("GET - /saram/update >>> no: " + req.query.no);
+  var idx = saramList.findIndex(function(saram) {
+    return saram.no == req.query.no;
+  });
+  var saram = req.query;
+  if(idx != -1) {
+    saramList[idx] = saram;
+  }
+  res.redirect("/saram");
 });
+
+app.get('/saram/delete', function(req, res) {
+  console.log("GET - /saram/delete >>>> no: " + req.query.no);
+  var idx = saramList.findIndex(function(saram) {
+      return saram.no == req.query.no;
+  });
+  if(idx != -1) {
+      saramList.splice(idx, 1);
+  }
+  res.redirect("/saram");
+})
+
+app.get('/saram/saramForm', function(req, res) {
+  res.redirect('/saramForm.html');
+})
+
+app.get('/saram/add', function(req, res) {
+  console.log('GET - /saram/add >>>> no: ' + req.query.no); //req.query.no = ?no=번호 에서 번호가 된다.
+  var saram = req.query;
+  saramList.push(saram);
+  res.redirect('/saram');
+})
 
 const server = http.createServer(app);
 server.listen(8000, function () {
