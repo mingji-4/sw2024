@@ -14,10 +14,10 @@ app.use(express.static('public'));
 
 // 사람 데이터 목록 선언
 const saramList = [
-  {no:101, name: '류현종', email: 'ryu@gmail.com', job:'개발자'},
-  {no:102, name: '강민지', email: 'gang@gmail.com', job:'인싸'},
-  {no:103, name: '홍채연', email: 'hong@gmail.com', job:'여행자'},
-  {no:104, name: '김민지', email: 'kim@gmail.com', job:'백수'}
+  {no:101, name: '류현종', email: 'ryu@gmail.com', job:'개발자', age:25},
+  {no:102, name: '강민지', email: 'gang@gmail.com', job:'인싸', age:25},
+  {no:103, name: '홍채연', email: 'hong@gmail.com', job:'여행자', age:25},
+  {no:104, name: '김민지', email: 'kim@gmail.com', job:'백수', age:24}
 ];
 
 // node ./app.js -> 링크 들어간 후 -> 크롬에 나오는 링크 뒤에 /home 해야 나옴
@@ -44,6 +44,25 @@ app.get('/saram/detail', function(req, res) {
     req.app.render('saramDetail', {saram}, function(err, html) {
       res.end(html);
     });
+});
+
+app.get('/saram/edit', function(req, res) {
+  console.log("GET - /saram/edit >>>> no: " + req.query.no);
+  var idx = saramList.findIndex(function(saram) {
+    return saram.no == req.query.no;
+  });
+  var saram = null;
+  if(idx != -1) {
+    saram = saramList[idx];
+  }
+  req.app.render('saramEdit', {saram}, function(err, html) {
+    res.end(html);
+  });
+});
+
+app.get('saram/update', function(req, res) {
+  console.log("GET - /saram/update >>> ", req.query);
+  res.send(req.query);
 });
 
 const server = http.createServer(app);
