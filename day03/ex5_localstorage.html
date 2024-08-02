@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        td.modifyBox {
+            display: none;
+        }
+    </style>
+    <script>
+        var todoList = [];
+        var seqCnt = 106;
+
+        function saveToLocalStorage() {
+            localStorage.setItem('todoList', JSON.stringify(todoList));
+        }
+
+        function loadFromLocalStorage() {
+            const savedList = localStorage.getItem('todoList');
+            if (savedList) {
+                todoList = JSON.parse(savedList);
+                seqCnt = Math.max(...todoList.map(todo => todo.seq)) + 1 || 106;
+            } else {
+                // 로컬 스토리지에 데이터가 없으면 기본 데이터를 설정
+                todoList = [
+                    { seq: 101, title: "여행하기", done: false },
+                    { seq: 102, title: "포트폴리오 만들기", done: true },
+                    { seq: 103, title: "팀 프로젝트 하기", done: false },
+                    { seq: 105, title: "저녁먹기", done: true },
+                    { seq: 104, title: "엄마 생일 선물 준비하기", done: false },
+                ];
+                seqCnt = 106;
+                saveToLocalStorage(); // 기본 데이터를 로컬 스토리지에 저장
+            }
+        }
+
+        window.onload = function () {
+            loadFromLocalStorage(); // 로컬 스토리지에서 데이터 로드
+
+            var memoTxt = document.getElementById('memoTxt');
+            var demo = document.querySelector('#demo');
+            var clickBtn = document.querySelector('#clickBtn');
+            var resetBtn = document.querySelector('#resetBtn');
+
+            HTMLButtonElement.prototype.handleDelEvt = function (btn) {
+                var trElement = btn.parentElement.parentElement;
+                var targetSeq = trElement.dataset.seq;
+
+                var idx = todoList.findIndex(function (todo) {
+                    return targetSeq == todo.seq;
+                });
+
+                if (idx != -1) {
+                    todoList.splice(idx, 1);
+                    saveToLocalStorage(); // 로컬 스토리지에 저장
+                    drawList();
+                }
+            }
+
+            HTMLButtonElement.prototype.editClickHandle = function (btn) {
+                var trElement = btn.parentElement.parentElement;
+                var targetSeq = trElement.dataset.seq;
+                var idx = todoList.findIndex(function (todo) {
+                    return targetSeq == todo.seq;
+                });
+
+                if (idx != -1) {
+                    var modifyBox = trElement.querySelector(".modifyBox");
+                    var titleBox = trElement.querySelector(".titleBox");
+                    modifyBox.style.display = "block";
+                    titleBox.style.display = "none";
+                    var modifyTxt = trElement.querySelector(".modifyTxt");
+                    modifyTxt.value = todoList[idx].title;
+
+                    trElement.querySelector(".modifyBtn").onclick = function (event) {
+                        modifyBox.style.display = "none";
+                        todoList[idx].title = modifyTxt.value;
+                        saveToLocalStorage(); // 로컬 스토리지에 저장
+                        drawList();
+                    };
+                }
+            }
+
+            window.aaaa = function (element) {
+                var trElement = element.parentElement.parentElement;
+                var targetSeq = trElement.dataset.seq;
+                var idx = todoList.findIndex(function (todo) {
+                    return targetSeq == todo.seq;
+                });
+
+                if (idx != -1) {
+                    todoList[idx].done = !todoList[idx].done;
+                    saveToLocalStorage(); // 로컬 스토리지에 저장
+                    drawList();
+                }
+            }
+
+            function drawList() {
+                demo.innerHTML = "";
+                todoList.forEach(function (todoObj) {
+                    demo.innerHTML += `<tr align="center" data-seq="${todoObj.seq}">
+                        <td><input type="checkbox" ${todoObj.done ? "checked" : ""} onchange="window.aaaa(this)"></td>
+                        <td class="titleBox" style="${todoObj.done ? "text-decoration:line-through" : ""}">${todoObj.title}</td>
+                        <td class="modifyBox">
+                            <input type="text" class="modifyTxt"> <button class="modifyBtn">수정완료</button>
+                        </td>
+                        <td><button onclick="editClickHandle(this)">수정</button></td>
+                        <td><button onClick="handleDelEvt(this)">삭제</button></td>
+                    </tr>`;
+                });
+            }
+
+            drawList();
+
+            var handleEvent = function (event) {
+                todoList.push({ seq: seqCnt++, title: memoTxt.value, done: false });
+                saveToLocalStorage(); // 로컬 스토리지에 저장
+                drawList();
+                memoTxt.value = "";
+                memoTxt.focus();
+            }
+
+            clickBtn.addEventListener('click', handleEvent);
+
+            memoTxt.onkeyup = function (event) {
+                if (event.keyCode === 13) {
+                    handleEvent(event);
+                }
+            }
+
+            resetBtn.onclick = function () {
+                localStorage.removeItem('todoList');
+                todoList = [];
+                drawList();
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Todo List</h1>
+    메모: <input type="text" id="memoTxt" value="안녕 세계">
+    <button type="button" id="clickBtn">Save</button>
+    <button type="button" id="resetBtn">Reset</button>
+    <hr>
+    검색: <input type="text" id="searchTxt">
+    <button id="searchBtn">검색</button>
+    <hr>
+    <table width="550" border="1">
+        <thead>
+            <tr>
+                <th>확인</th>
+                <th>할일</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody id="demo">
+
+        </tbody>
+    </table>
+</body>
+
+</html>
