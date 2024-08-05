@@ -19,26 +19,27 @@
         // typeog(num1)로 변수의 타입 확인
         var num1 = 1004;
         console.log(num1);
-        console.log(typeof (num1));
-        document.write(typeof (num1) + "<br>");
+        console.log( typeof(num1) );
+        document.write(typeof(num1) + "<br>");
 
         // 변수에 어떤 데이터 타입이든 대입 가능하다.
         // 변수에 담겨지는 내용의 타입에 따라 변수 타입이 결정됨
         num1 = "숫자 100";
         console.log(num1);
-        console.log(typeof (num1));
+        console.log( typeof(num1) );
+        console.write(typeof(num1));
 
         var obj = new Object();
         obj.name = "kim";
         obj.job = "교수";
         console.dir(obj);
-        console.log(typeof (obj));
+        console.log( typeof(obj));
 
         // 객체를 리터럴로 사용
-        var obj2 = { job: "도둑", name: "홍길동" };
+        var obj2 = {job: "도둑", name: "홍길동"};
         obj2.address = "서울 종로구";
         console.log(obj2);
-        console.log(typeof (obj2));
+        console.log(typeof(obj2));
 
         // 배열로 초기화
         var arr = new Array();
