@@ -95,6 +95,19 @@
 
         console.log(sicStr + total);
 
+        // for문 3
+        var sicStr = "";
+        var total = 0;
+
+        for (var p = 0, c = 1, n = 0; c <= 21; n = p + c, p = c, c = n) {
+            sicStr += c;
+            total += c;
+            sicStr += (c < 21) ? "+" : "="; // 삼항연산(논리연산)
+        }
+
+        console.log(sicStr + total);
+        document.write(sicStr + total);
+
         // 출력 된 피보나치 수열의 합을 결과로 출력
         // 결과 =54
     </script>
