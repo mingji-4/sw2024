@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
 </head>
 <body>
-    <h1>할 일 입력</h1>
+    <h1>Todo List</h1>
     <p>
         할일: <input type="text" class="title">
         <button id="saveBtn">SAVE</button>
@@ -15,22 +15,28 @@
     </ul>
 
     <script>
+        // 할일 입력 필드와 저장 버튼을 선택
         var saveBtn = document.querySelector("#saveBtn");
         var title = document.querySelector(".title");
 
-        // 단순 텍스트를 추가하는 형식을 <li> 태그로 변경
+        // 할일을 결과 영역에 추가하는 함수
         function append() {
             var listArea = document.querySelector(".resultArea");
+            // 입력된 할일을 리스트 항목으로 추가
             listArea.innerHTML += `<li>${title.value}</li>`;
+            // 입력 필드를 비우고 포커스를 다시 입력 필드로 이동
             title.value = "";
             title.focus();
         }
 
+        // 저장 버튼 클릭 시 실행되는 함수
         saveBtn.onclick = function() {
-            append()
+            append();
         }
 
+        // 할일 입력 필드에서 엔터 키를 눌렀을 때 실행되는 함수
         title.onkeydown = function(e) {
+            // 눌린 키가 엔터 키인지 확인
             if(e.keyCode === 13) {
                 append();
             }

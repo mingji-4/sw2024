@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
 </head>
 <body>
     <h1>Todo List</h1>
@@ -15,63 +15,81 @@
     </ul>
 
     <script>
+        // 할일 입력 필드와 저장 버튼을 선택
         var saveBtn = document.querySelector("#saveBtn");
         var title = document.querySelector(".title");
 
-        // 할 일 삭제 기능이 가능하도록 Array를 활용 한다.
+        // 초기 할일 목록 설정
         var todoList = [
-            {no:101, title:"hello", done:false},
+            {no:101, title:"hello1", done:false},
             {no:102, title:"hello2", done:false},
             {no:103, title:"hello3", done:false},
-            {no:104, title:"hello4", done:false}
+            {no:104, title:"hello4", done:false},
         ];
+
+        // 할일 번호 시퀀스 설정
         var todoSeq = 105;
+
+        // 할일 목록을 화면에 그리는 함수
         function drawList() {
             var listArea = document.querySelector(".resultArea");
-            listArea.innerHTML = "";
+            listArea.innerHTML = "";  // 기존 목록 초기화
             todoList.forEach(function(todo) {
                 var liTag = document.createElement("li");
                 var checkBox = document.createElement("input");
                 var delBtn = document.createElement("button");
                 var spanTag = document.createElement("span");
 
+                // 리스트 스타일 설정
                 liTag.style.listStyle = "none";
+
+                // 체크박스 속성 설정
                 checkBox.setAttribute("type", "checkbox");
+
+                // 할일 제목 설정
                 spanTag.innerHTML = todo.title + " ";
+
+                // 삭제 버튼 텍스트 설정 및 클릭 이벤트 핸들러 추가
                 delBtn.innerText = "Delete";
                 delBtn.addEventListener('click', function(event) {
                     var idx = todoList.findIndex(function(t) {
                         return t.no === todo.no
                     });
                     if(idx != -1) {
-                        todoList.splice(idx, 1);
-                        drawList();
+                        todoList.splice(idx, 1);  // 할일 목록에서 삭제
+                        drawList();  // 목록 다시 그리기
                     }
                 });
 
+                // 각 요소를 리스트 항목에 추가
                 liTag.appendChild(checkBox);
                 liTag.appendChild(spanTag);
                 liTag.appendChild(delBtn);
-                listArea.appendChild(liTag);
+                listArea.appendChild(liTag);  // 리스트 영역에 리스트 항목 추가
             });
         }
+
+        // 초기 할일 목록 그리기
         drawList();
 
-        // Array에 새 할 일 추가
+        // 할일 목록에 새로운 할일 함수 추가
         function append() {
             todoList.push({
                 no:todoSeq++, title:title.value, done:false
             });
-            drawList();
-            title.value = "";
-            title.focus();
+            drawList();  // 목록 다시 그리기
+            title.value = "";  //입력 필드 초기화
+            title.focus();  // 입력 필드에 포커스
         }
 
+        // 저장 버튼 클릭 시 실행되는 함수
         saveBtn.onclick = function() {
-            append()
+            append();
         }
 
+        // 할일 입력 필드에서 엔터 키를 눌렀을 때 실행되는 함수
         title.onkeydown = function(e) {
+            // 눌린 키가 엔터 키인지 확인
             if(e.keyCode === 13) {
                 append();
             }

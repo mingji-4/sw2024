@@ -3,38 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
 </head>
 <body>
-    <h1>할 일 입력</h1>
+    <h1>Todo List</h1>
     <p>
         할일: <input type="text" class="title">
         <button id="saveBtn">SAVE</button>
     </p>
     <p class="resultArea">
-        결과: 
+        결과:
     </p>
 
     <script>
-        // CSS 셀렉터를 이용해서 DOM 참조
-        // https://www.w3schools.com/jsref/met_element_queryselector.asp
-        // querySelectALL은 여러개를 List형태로 가져온다.
+        // 할일 입력 필드와 저장 버튼을 선택
         var title = document.querySelector(".title");
         var saveBtn = document.querySelector("#saveBtn");
-        // 확인
+
+        // 콘솔에 선택한 요소들을 출력
         console.log(title);
         console.dir(saveBtn);
-        // 버튼 이벤트 핸들러
-        // 익명함수로 이벤트 핸들러 만들기
+
+        // 저장 버튼 클릭 시 실행되는 함수
         saveBtn.onclick = function() {
-            console.log("저장 버튼 눌렀다!", title.value);
+            console.log("저장 버튼을 눌렀다!", title.value);
+            // 입력된 할일을 결과 영역에 추가
             document.querySelector(".resultArea").innerHTML += `<p>${title.value}</p>`;
         }
 
-        // 키 이벤트 사용하기
-        title.onkeydown = function(e) {
+        // 할일 입력 필드에서 SAVE를 눌렀을 때 실행되는 함수
+        title.onclick = function(e) {
             if(e.keyCode === 13) {
-                document.querySelector(".resultArea").innerHTML += `<p>${title.value}</p>` ;
+                // 입력된 할일을 결과 영역에 추가
+                document.querySelector(".resultArea").innerHTML += `<p>${title.value}</p>`;
             }
         }
     </script>
