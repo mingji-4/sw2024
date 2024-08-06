@@ -10,24 +10,29 @@
 <body>
 
     <script>
+        // Animal 생성자 함수 정의
         function Animal(name, sound) {
             this.name = name;
             this.sound = sound;
         }
+        // Animal 프로토타입에 mkSound 메소드 추가
         Animal.prototype.mkSound = function () {
             console.log(`${this.name}이(가) ${this.sound} 소리를 낸다`);
         }
 
         // 실습: Animal을 상속 받은 Dog과 Cat을 구현 하세요.
-        
+        // Dog 생성자 함수 정의
         function Dog(name, sound, age) {
-            Animal.call(this, name, sound);
+            Animal.call(this, name, sound);  // Animal 생성자 함수 호출
+
             this.age = age;
         }
+        // Dog 프로토타입을 Animal 프로토타입으로 설정
         Dog.prototype = Object.create(Animal.prototype);
         Dog.prototype.constructor = Dog;
+        // Dog 프로토타입에 mkSound 메소드 추가 및 오버라이드
         Dog.prototype.mkSound = function () {
-            Animal.prototype.mkSound.call(this);
+            Animal.prototype.mkSound.call(this);  // 상위 클래스의 mkSound 메소드 호출
             // console.log(this.age + "살");
         }
 
@@ -43,11 +48,13 @@
             Animal.prototype.mkSound.call(this);
         }
 
+        // 동물 객체 배열 생성
         const animals = [
             new Dog("감자", "망망", 6),
             new Cat("튀김", "먀~", 4)
         ];
 
+        // 배열의 각 동물 객체에 대해 mkSound 메소드 호출
         animals.forEach(function(ani) {
             ani.mkSound();
         });
