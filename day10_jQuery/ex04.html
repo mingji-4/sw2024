@@ -8,24 +8,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            // 
-            $("button:nyh(0)").click(function () {
+            //$("h2").css("backgroundColor","yellow");
+            $("button:nth(0)").click(function () {
                 $("p").hide(600);
-                $("body").css({backgroundColor: ""});
+                $("body").css({ backgroundColor: "" });
             });
-
-            $("button:nyh(1)").click(function () {
-                $("p").hide(600);
-                $("body").css({backgroundColor: "orange"});
-                // jQuery 객체를 으로 변경해서 사용
-                $("p:nth(1)")[o].innerText = "welcome";
-                // jQuery의 text() or html()메서드 사용
-                $("p:nth(0)").text();
-                // 
-                $("p:nth(2)").text("Hello World")
+            $("button:nth(1)").click(function () {
+                $("p").show(600);
+                $("body").css({ backgroundColor: "orange" });
+                // jQuery객체를 DOM으로 변경해서 사용
+                $("p:nth(1)")[0].innerText = "welcome!";
+                // jQuery의 text() 또는 html() 메서드 사용
+                $("p:nth(0)").text("즐겁게 코딩하자");
+                // 메서드 체인
+                $("p:nth(2)").text("Hello world")
                     .css({
                         color: "green",
                         backgroundColor: "yellow"
+                    }).on('click', function () {
+                        alert(this.innerText);
+                        $(this).off('click');
                     });
             });
         });
@@ -38,10 +40,9 @@
     <button>Click me</button>
     <button>again</button>
 
-    <p>If you click on me, I will disappear.</p>
-    <p>Click me away!</p>
-    <p>Click me too!</p>
-
+    <p>This is a paragraph.</p>
+    <p>This is another paragraph.</p>
+    <p>새로 추가 한 p태그</p>
 </body>
 
 </html>
