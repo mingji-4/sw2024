@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 
+            $("button:nyh(0)").click(function () {
+                $("p").hide(600);
+                $("body").css({backgroundColor: ""});
+            });
+
+            $("button:nyh(1)").click(function () {
+                $("p").hide(600);
+                $("body").css({backgroundColor: "orange"});
+                // jQuery 객체를 으로 변경해서 사용
+                $("p:nth(1)")[o].innerText = "welcome";
+                // jQuery의 text() or html()메서드 사용
+                $("p:nth(0)").text();
+                // 
+                $("p:nth(2)").text("Hello World")
+                    .css({
+                        color: "green",
+                        backgroundColor: "yellow"
+                    });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h2>This is a heading</h2>
+
+    <button>Click me</button>
+    <button>again</button>
+
+    <p>If you click on me, I will disappear.</p>
+    <p>Click me away!</p>
+    <p>Click me too!</p>
+
+</body>
+
+</html>

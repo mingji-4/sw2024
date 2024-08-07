@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script>
+        $(document).ready(function() {
+            var header = document.getElementById("header");
+            console.log(header);
+
+            // css 에서 사용되는 선택기를 그대로 사용
+            console.log($("#header").get(0));
+            console.log($("#header")[0] == header);
+            console.log($("#header")[0] == $(header)[0]);
+
+            // css 셀렉터를 이용해서 jQuery 만들기
+            $("#header").css("color", "#fcffb0");
+            // 기존 자바스크립트 DOM 객체로 jQuery 만들기
+            $("#header").css("background", "skyblue")
+            document.getElementById("header").style.textShadow="1px 1px 1px black";
+
+            $("#header h2").css({
+                color: "plum",
+                backgroundColor: "pink"
+            });
+        })
+    </script>
+</head>
+<body>
+    <div id="header">
+        <h1>Hello World</h1>
+        <h2>방가방가</h2>
+    </div>
+</body>
+</html>
