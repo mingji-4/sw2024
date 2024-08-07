@@ -23,8 +23,8 @@
                 // 메서드 체인
                 $("p:nth(2)").text("Hello world")
                     .css({
-                        color: "green",
-                        backgroundColor: "yellow"
+                        color: "yellow",
+                        backgroundColor: "green"
                     }).on('click', function () {
                         alert(this.innerText);
                         $(this).off('click');
