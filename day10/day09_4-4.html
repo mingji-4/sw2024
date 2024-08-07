@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>햄버거하우스 게임</title>
+    <style>
+        #box {
+            border: 5px solid plum;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .newBox {
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+            width: 100px;
+            height: 100px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+
+        .newBox ul {
+            display: block;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .newBox ul li {
+            border: 1px solid orange;
+            width: 100px;
+            height: 100px;
+            list-style: none;
+            text-align: center;
+            line-height: 100px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>햄버거하우스 게임</h1>
+    <button id="startBtn">START</button>
+    <button id="stopBtn">STOP</button>
+    <hr>
+    <div id="box"></div>
+    <p id="result"></p>
+
+    <script>
+        // 슬롯 심볼 정의
+        const symbols = ["🍒", "🍋", "🍊", "🍉", "⭐", "🔔", "7️⃣", "🍇", "🍓", "🍍"];
+
+        // Box 생성자 함수 정의
+        function Box() { }
+
+        // Box 프로토타입을 HTMLDivElement 프로토타입으로 설정
+        Box.prototype = Object.create(HTMLDivElement.prototype);
+        Box.prototype.constructor = Box;
+
+        // Box 초기화 메소드
+        Box.prototype.init = function () {
+            this.newBox = document.createElement("div"); // 새로운 div 요소 생성
+            this.elementUl = document.createElement("ul"); // 새로운 ul 요소 생성
+
+            // 심볼을 li 요소로 생성하여 ul에 추가
+            for (let i = 0; i < symbols.length; i++) {
+                this.elementLi = document.createElement("li");
+                this.elementLi.innerText = symbols[i]; // li 요소에 심볼 텍스트 추가
+                this.elementUl.appendChild(this.elementLi); // ul 요소에 li 추가
+            }
+
+            this.newBox.appendChild(this.elementUl); // Box 요소에 ul 추가
+            this.newBox.setAttribute("class", "newBox"); // Box 요소에 클래스 설정
+            return this.newBox;
+        }
+
+        // Box 시작 메소드
+        Box.prototype.start = function (speed) {
+            this.elementUl.style.position = "absolute"; // ul 요소의 위치를 절대 위치로 설정
+            this.elementUl.style.left = "0px";
+            this.elementUl.style.top = "0px";
+            this.y = 0; // y 좌표 초기화
+            this.intervalRef = setInterval(() => {
+                this.y -= 10; // y 좌표를 10씩 감소시켜 위로 이동
+                this.elementUl.style.top = this.y + "px"; // ul 요소의 top 위치 설정
+                if (this.y <= -1000) { // ul 요소가 한 바퀴 다 돌면
+                    this.y = 0; // y 좌표를 0으로 초기화
+                }
+            }, speed); // 주어진 속도로 반복
+        }
+
+        // Box 멈춤 메소드
+        Box.prototype.stop = function () {
+            clearInterval(this.intervalRef); // setInterval 중지
+            let currentPos = Math.abs(this.y % 1000); // 현재 y 좌표를 1000 단위로 나눈 나머지
+            let stopPos = Math.floor(currentPos / 100) * 100; // 100 단위로 내림
+            this.elementUl.style.top = -stopPos + "px"; // ul 요소의 top 위치 설정
+            this.currentSymbol = symbols[stopPos / 100]; // 멈춘 위치의 심볼 저장
+        }
+
+        const divBox = document.querySelector("#box"); // box 요소 선택
+
+        // Box 객체 배열 생성
+        const boxArr = Array.from({ length: 9 }, () => new Box());
+
+        // 각 Box 객체를 초기화하고 divBox에 추가
+        for (let i = 0; i < boxArr.length; i++) {
+            const newBox = boxArr[i].init();
+            divBox.appendChild(newBox);
+        }
+
+        const startBtn = document.querySelector("#startBtn"); // 시작 버튼 선택
+        // 시작 버튼 클릭 이벤트 리스너 추가
+        startBtn.addEventListener('click', function () {
+            boxArr.forEach(function (box) {
+                box.start(Math.floor(5 + Math.random() * 20)); // 랜덤 속도로 Box 시작
+            });
+            document.getElementById("result").textContent = ""; // 결과 메시지 초기화
+        });
+
+        const stopBtn = document.querySelector("#stopBtn"); // 멈춤 버튼 선택
+        // 멈춤 버튼 클릭 이벤트 리스너 추가
+        stopBtn.addEventListener('click', function () {
+            boxArr.forEach(function (box) {
+                box.stop(); // 모든 Box 멈춤
+            });
+        });
+    </script>
+</body>
+
+</html>
