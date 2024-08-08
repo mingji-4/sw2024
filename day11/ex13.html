@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .box {
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            width: 100px;
+            height: 100px;
+            box-sizing: border-box;
+            border: 3px solid black;
+            background-color: pink;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+
+    <script>
+        // .box 요소에서 마우스 다운 이벤트가 발생하면 실행
+        $('.box').mousedown(function (e) {
+            // 마우스 클릭 지점과 .box 요소의 왼쪽과의 거리(gapX) 저장
+            $('.box').data('gapX', e.clientX - $('.box').offset().left);
+            // 마우스 클릭 지점과 .box 요소의 위쪽과의 거리(gapY) 저장
+            $('.box').data('gapY', e.clientY - $('.box').offset().top);
+
+            // 마우스가 움직일 때마다 실행
+            $(window).on('mousemove', function (event) {
+                // .box 요소를 마우스 커서 위치에 맞춰 이동
+                $('.box').css({
+                    left: event.clientX - $('.box').data('gapX') + 'px',
+                    top: event.clientY - $('.box').data('gapY') + 'px'
+                });
+            });
+
+            // 마우스를 떼면 실행
+            $(window).on('mouseup', function (event) {
+                // 마우스 이동 이벤트를 제거
+                $(window).off('mousemove');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

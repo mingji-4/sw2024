@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery에서 많이 사용되는 메서드</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- 
+    script가 body 태그 위에 있으면 $(document).ready()같은 진입점 필요
+    jQuery에서 사용할 스타일을 미리 정의 해두기
+    -->
+    <style>
+        li.pinkColor {
+            color: pink;
+            text-decoration: underline;
+            font-size: 20pt;
+            font-weight: bolder;
+            background-color: paleturquoise;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1 class="heading">Hello World</h1>
+        <div class="navi">Home | Profile | Gallery</div>
+    </div>
+    <hr>
+    <div>
+        <button id="transKorBtn">한글로 변환</button>
+        <button id="toggleTodoList">목록 toggle</button>
+        <hr>
+        <button id="addClassBtn">클래스 적용</button>
+        <button id="removeClassBtn">클래스 제거</button>
+        <button id="toggleClassBtn">토글 클래스</button>
+    </div>
+    <div>
+        제목: <input type="text" class="todoTitle">
+        <hr>
+        <ul class="todoList">
+            <li>코딩하기</li>
+            <li>필기하기</li>
+            <li>쉬기..</li>
+        </ul>
+    </div>
+
+    <script>
+        // head태그 아래에 있어도 jQuery진입점을 쓰는 것이 좋음
+        // ready()는 DOM 트리의 구조만 로드되어도 바로 실행 됨
+        jQuery(document).ready(function () {
+            // $('#transKorBtn').on('click', function(event) {
+            $('#transKorBtn').click(function (event) {
+                // alert('Hello jQuery World');
+                // setter
+                $('.heading').text('안녕 세계');
+                // getter
+                console.log($('.heading').text());
+
+                $('.navi').html(`
+                    <a href="">홈</a> |
+                    <a href="">프로필</a> |
+                    <a href="">갤러리</a>`
+                );
+            });
+
+            $('.todoTitle').change((event) => {
+                // ${} : 템플릿 문자열 (바닐라 자바스크립트에서도 사용)
+                // $(요소) : jQuery 선택기
+                var newTitle = $(event.target).val();
+                $('.todoList').append(`<p>${newTitle}</p>`)
+                // input 초기화 및 포커스 (메서드 체인)
+                $(event.target).val("").focus();
+            });
+
+            $('#toggleTodoList').click(function () {
+                $(".todoList").toggle('fast'); // slow, fast, 숫자
+            });
+
+            // 클래스 적용 메서드 연습
+            $('#addClassBtn').click(function (event) {
+                $('.todoList li').addClass('pinkColor');
+            });
+            $('#removeClassBtn').click(function (event) {
+                $('.todoList li').removeClass('pinkColor');
+            });
+            $('#toggleClassBtn').click(function (event) {
+                $('.todoList li').toggleClass('pinkColor');
+            });
+        });
+    </script>
+</body>
+
+</html>

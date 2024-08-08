@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>jQuery Method Chaining Example</title>
+  <!-- jQuery 라이브러리 로드 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    .highlight {
+      background-color: yellow;
+      font-size: 24pt;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>jQuery Method Chaining Example</h2>
+  <p class="content">This is a paragraph.</p>
+  <button id="actionButton">Action</button>
+  <button id="resetButton">Rest</button>
+
+  <script>
+    // jQuery 메서드 체인을 사용하여 여러 메서드를 연속으로 적용
+    $(document).ready(function () {
+      // #actionButton 요소를 클릭했을 때 실행
+      $('#actionButton').click(function () {
+        $('.content')
+          .addClass('highlight')            // .content 요소에 'highlight' 클래스 추가
+          .fadeOut(1000)                    // .content 요소를 1초 동안 서서히 사라지게 함
+          .fadeIn(1000)                     // .content 요소를 1초 동안 서서히 나타나게 함
+          .text('Paragraph content has been changed.') // .content 요소의 텍스트를 변경
+          .css('color', 'blue');            // .content 요소의 텍스트 색상을 파란색으로 변경
+      });
+
+      // #resetButton 요소를 클릭했을 때 실행
+      $('#resetButton').click(function () {
+        $('.content').removeClass('highlight'); // .content 요소에서 'highlight' 클래스를 제거
+      });
+    });
+  </script>
+
+</body>
+
+</html>
