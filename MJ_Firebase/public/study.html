@@ -1,14 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study</title>
     <link rel="stylesheet" href="basic.css">
     <style>
-        @import url(//fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+        .study {
+            text-align: center;
+            align-items: center;
+            padding-top: 40px;
+        }
+
+        .study a {
+            display: inline-block;
+            margin: 15px;
+        }
+
+        .study img {
+            border-radius: 20%;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .study img:hover {
+            transform: rotate(5deg);
+        }
     </style>
 </head>
+
 <body>
     <header id="header">
         <nav class="menu">
@@ -23,14 +45,15 @@
     </header>
     <div class="list">
         <div class="study">
-            <a href="https://crimson-nova-e00.notion.site/sw-2024-22ad1a0900304b4c8dfb06219dd45b8a?pvs=4">
+            <a href="https://crimson-nova-e00.notion.site/sw-2024-ece742b61fd6424993dba56cc39afabf?pvs=4">
                 <span class="study"><img src="notion.png" width="150px;" height="150px" alt="" /></span>
             </a>
             <a href="https://github.com/mingji-4/sw2024">
-            <span class="study"><img src="github.jpeg" width="150px;" height="150px" alt="" /></span>
+                <span class="study"><img src="github.jpeg" width="150px;" height="150px" alt="" /></span>
             </a>
             <h3>사진 클릭하시면 이동됩니다 💨💨</h3>
         </div>
     </div>
 </body>
+
 </html>
