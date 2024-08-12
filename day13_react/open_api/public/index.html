@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,16 +10,29 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body>
-    <h1>Hello React Project</h1>
     <div id="root"></div>
 
     <script type="text/babel">
+        const TodoList = () => {
+            return (<>
+                <h2>Todo List</h2>
+                <p><input type="text" />
+                    {
+                        /* 중괄호 안은 자바스크립트 문법으로 됨 */
+                        console.log("여기는 자바스크립트 공간")
+                    }
+                    <button>SAVE</button></p>
+            </>)
+        }
+
         // 새로운 컴포넌트 선언 - html 태그처럼 사용
         function Hello() {
             return (<>
-                <h2>Welcome</h2>
-                <h3>오신것을 환영해 ~</h3>
+                <h1>Hello React Project</h1>
+                {/* 위에 TodoList 컴포넌트 생성 하기 */}
+                <TodoList />
             </>);
         }
 
@@ -33,4 +47,5 @@
         root.render(<Hello />);
     </script>
 </body>
+
 </html>
