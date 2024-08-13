@@ -1,6 +1,8 @@
 # Inside that directory, you can run several commands:
 
-- react 01 폴더는 react/day02 내용과 같아서 지움
+- react01 폴더는 react/day02 내용과 같아서 지움
+
+- 이 명령들은 모두 package.json 파일의 script에 정의되어 있음
 
   - npm start
     
