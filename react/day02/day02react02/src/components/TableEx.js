@@ -2,7 +2,7 @@ export default () => {
     return (<div>
         <h1>Hello React World</h1>
         <button className='btn btn-primary'>CLICK</button>
-        <table class="table table-dark table-hover">
+        <table className="table table-dark table-hover">
             <thead>
                 <tr>
                     <th>Firstname</th>
@@ -28,5 +28,5 @@ export default () => {
                 </tr>
             </tbody>
         </table>
-    </div>)
+    </div>);
 };
