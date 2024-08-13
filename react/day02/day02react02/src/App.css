@@ -3,5 +3,9 @@ h1 {
 }
 
 header.jumbotron {
-    margin-bottom: 0px;
+    margin-bottom: 15px;
+}
+
+#todoListTbl tr td {
+    text-align: center;
 }
