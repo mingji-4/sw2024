@@ -15,7 +15,7 @@
 
 We suggest that you begin by typing:
 
-  - cd /Users/minji/sw2024/react
+  - cd /Users/minji/sw2024/day12_react/react01
   - npm start
 
 Happy hacking!
