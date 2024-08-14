@@ -1,5 +1,11 @@
-import { useState } from 'react';
-import Photo from './Photo';
+import { useState } from "react";
+import PhotoList from "./pages/PhotoList";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./pages/Layout";
+import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
+import Contact from "./pages/Contact";
+import NoPage from "./pages/NoPage";
 
 const App = () => {
     const [photoArr, setPhotoArr] = useState([
@@ -11,12 +17,17 @@ const App = () => {
         { no: 6, img: "images/img_riomaggiore.jpg", title: "Riomaggiore", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." }
     ]);
 
-    return (<div className="w3-content">{
-        photoArr.map(function (item, idx) {
-            return <Photo key={item.no} item={item} />
-        })
-    }</div>);
+    return (<BrowserRouter>
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="/album" element={<PhotoList photoArr={photoArr} />} />
+                <Route path="/blogs" element={<Blogs />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NoPage />} />
+            </Route>
+        </Routes>
+      </BrowserRouter>);
 }
-
 
 export default App;
