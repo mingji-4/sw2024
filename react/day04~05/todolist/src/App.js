@@ -10,6 +10,7 @@ const App = ()=>{
     const [name, setName] = useState("Todo List");
     const [todoList, setTodoList] = useState([]);
     const [noCnt, setNoCnt] = useState(105);
+    const serverURL = 'http://localhost:3000/todo';
 
     // useEffect()훅 - 렌더링 되는 것과 비동기로 작동한다.
     // 최초 한번만 실행 됨.
@@ -17,43 +18,56 @@ const App = ()=>{
     // useEffect() 훅 내부에서 axios를 이용해서 처리.
     // npm i -S axios
     useEffect(()=>{
-        axios.get('http://localhost:3000/todo').then(function (response) {
+        axios.get(serverURL).then(function (response) {
             setTodoList(response['data']);
         });
     }, []);
 
-    const onClickEvent = (inputTitle) => {
+    const onClickEvent = (newTodoTitle) => {
         // 기존 내용에 새 내용을 추가 해서 새 배열을 생성
-        setTodoList([...todoList, {no:noCnt, title:inputTitle, done: false}]);
-        setNoCnt(noCnt+1);
+        // setTodoList([...todoList, {no:noCnt, title:inputTitle, done: false}]);
+        // setNoCnt(noCnt+1);
+        axios.post(serverURL, {title: newTodoTitle}).then(function (response) {
+            setTodoList(response.data); // setTodoList(response['data']);
+        });
     }
 
     const onDelete = ({no, title, done}) => {
-        const newList = todoList.filter((todo)=> {
-            return todo.no != no;
+        // const newList = todoList.filter((todo)=> {
+        //     return todo.no != no;
+        // });
+        axios.delete(serverURL + "/" + no).then(function (response) {
+            setTodoList(response.data);
         });
-        setTodoList(newList);
+        // setTodoList(newList);
     };
 
-    const onDoneFlag = ({no, title, done})=>{
-        const newTodoList = [...todoList];
-        todoList.forEach((item, idx)=> {
-            if(item.no == no) {
-                newTodoList[idx].done = !done;
-            }
+    const onDoneFlag = (todoItem)=>{
+        // const newTodoList = [...todoList];
+        // todoList.forEach((item, idx)=> {
+        //     if(item.no == no) {
+        //         newTodoList[idx].done = !done;
+        //     }
+        // });
+        todoItem.done = !todoItem.done;
+        axios.put(serverURL, todoItem).then(function (response) {
+            setTodoList(response.data);
         });
-        setTodoList(newTodoList);
+        // setTodoList(newTodoList);
     };
 
-    const onEdit = ({no, title, done})=>{
-        const newTodoList = [...todoList];
-        todoList.forEach((item, idx)=> {
-            if(item.no == no) {
-                newTodoList[idx].done = done;
-                newTodoList[idx].title = title;
-            }
+    const onEdit = (todoItem)=>{
+        // const newTodoList = [...todoList];
+        // todoList.forEach((item, idx)=> {
+        //     if(item.no == no) {
+        //         newTodoList[idx].done = done;
+        //         newTodoList[idx].title = title;
+        //     }
+        // });
+        axios.put(serverURL, todoItem).then(function (response) {
+            setTodoList(response.data);
         });
-        setTodoList(newTodoList);
+        // setTodoList(newTodoList);
     };
 
     // 취소선 스타일 설정
