@@ -7,12 +7,7 @@ const App = ()=>{
     // 전역변수를 state로 만들어 주어야 re rendering 된다.
     // 구조분해 할당 = state변수, setter함수
     const [name, setName] = useState("Todo List");
-    const [todoList, setTodoList] = useState([
-        {no: 101, title: "Study", done: false},
-        {no: 102, title: "Java Study", done: true},
-        {no: 103, title: "React Study", done: false},
-        {no: 104, title: "Spring Study", done: false}
-    ]);
+    const [todoList, setTodoList] = useState([]);
     const [noCnt, setNoCnt] = useState(105);
 
     const onClickEvent = (inputTitle) => {
