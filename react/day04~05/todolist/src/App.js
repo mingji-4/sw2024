@@ -1,6 +1,7 @@
 import "./App.css";
 import {useState} from "react";
-import ItemRow from "./ItemRow";
+import Input from "./Input";
+import Output from "./Output";
 
 const App = ()=>{
     // 전역변수를 state로 만들어 주어야 re rendering 된다.
@@ -8,27 +9,16 @@ const App = ()=>{
     const [name, setName] = useState("Todo List");
     const [todoList, setTodoList] = useState([
         {no: 101, title: "Study", done: false},
-        {no: 102, title: "Java Study", done: false},
+        {no: 102, title: "Java Study", done: true},
         {no: 103, title: "React Study", done: false},
         {no: 104, title: "Spring Study", done: false}
     ]);
     const [noCnt, setNoCnt] = useState(105);
 
-    const [inputTitle, setInputTtile] = useState("");
-    const [outputTitle, setOutputTtile] = useState("");
-
-
-    const [flag, setFlag] = useState(false);
-
-    const onClickEvent = () => {
+    const onClickEvent = (inputTitle) => {
         // 기존 내용에 새 내용을 추가 해서 새 배열을 생성
         setTodoList([...todoList, {no:noCnt, title:inputTitle, done: false}]);
         setNoCnt(noCnt+1);
-        setInputTtile("");
-    }
-
-    const onChangeTitle = (e) => {
-        setInputTtile(e.target.value);
     }
 
     const onDelete = ({no, title, done}) => {
@@ -57,7 +47,6 @@ const App = ()=>{
             }
         });
         setTodoList(newTodoList);
-        console.log(newTodoList);
     };
 
     // 취소선 스타일 설정
@@ -67,41 +56,12 @@ const App = ()=>{
         <div className="App-header">
             <h1>{name} App</h1>
         </div>
-        <div className="input-title">
-          <div className="container" style={{padding: "10px"}}>
-            <div className="input-group mb-3">
-                <input value={inputTitle} onChange={onChangeTitle} type="text" className="form-control"/>
-                <div className="input-group-append">
-                    <button className="btn btn-success" onClick={onClickEvent}>Save</button>
-                </div>
-            </div>
-          </div>
-        </div>
-        <div className="list-body">
-          <div className="container">
-          <table className="table table-hover">
-            <thead>
-                <tr style={{textAlign:"center"}}>
-                    <th>Done</th>
-                    <th>Title</th>
-                    <th>Buttons</th>
-                </tr>
-                </thead>
-                <tbody>
-                {todoList.map((item)=> {
-                    return(<tr key={item.no}>
-                        <td colSpan={3} style={{padding:"0px"}}>
-                            <ItemRow item={item} onDoneFlag={onDoneFlag} onDelete={onDelete} onEdit={onEdit} />
-                        </td>
-                    </tr>)
-                })}
-                </tbody>
-            </table>
-            <ul>
-                
-            </ul>
-          </div>
-        </div>
+
+        {/* todo 타이틀 입력 컴포넌트 위치 */}
+        <Input onClickEvent={onClickEvent} />
+
+        {/* todo 목록이 출력되는 컴포넌트 위치 */}
+        <Output todoList = {todoList} onDelete={onDelete} onDoneFlag={onDoneFlag} onEdit={onEdit} />
     </div>);
 }
 
