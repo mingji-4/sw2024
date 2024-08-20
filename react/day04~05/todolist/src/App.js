@@ -10,7 +10,7 @@ const App = ()=>{
     const [name, setName] = useState("Todo List");
     const [todoList, setTodoList] = useState([]);
     const [noCnt, setNoCnt] = useState(105);
-    const serverURL = 'http://localhost:3000/todo';
+    const serverURL = 'http://localhost:3030/todo';
 
     // useEffect()훅 - 렌더링 되는 것과 비동기로 작동한다.
     // 최초 한번만 실행 됨.

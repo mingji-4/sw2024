@@ -4,7 +4,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-app.set('port', 3000);
+app.set('port', 3030);
 
 // static 미들 웨어
 app.use('/', express.static("public"));
