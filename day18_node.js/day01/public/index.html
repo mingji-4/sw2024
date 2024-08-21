@@ -3,9 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>사원 관리 페이지</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h1>안녕 세계, index.html 페이지</h1>
+    <h1>사원 관리 페이지</h1>
+    <form id="saramForm">
+        <div>
+            <label>이름: <input type="text" id="name"></label>
+            <br>
+            <label>부서: <input type="text" id="dept"></label>
+            <br>
+            <label>직책: <input type="text" id="grade"></label>
+            <br>
+            <br>
+            <button type="submit" id="addSaramBtn">새 사원 추가</button>
+        </div>
+    </form>
+    <hr>
+    <div>
+        <button id="deleteSelectedBtn">선택 삭제</button> |
+        <select id="searchType">
+            <option value="name">이름</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="검색">
+    </div>
+    <table>
+        <thead>
+            <tr style="background-color: orange;">
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>번호</th>
+                <th>사원명</th>
+                <th>부서</th>
+                <th>직급</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody id="saramTableBody"></tbody>
+    </table>
+    <script src="index.js"></script>
 </body>
 </html>
