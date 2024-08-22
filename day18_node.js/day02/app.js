@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const expressSession = require('express-session');
+const expressSession = require("express-session");
 
 app.set('port', 3000);
 app.set("views", "views");
@@ -19,11 +19,12 @@ app.use(cookieParser());
 
 // 세션 미들웨어 등록
 app.use(expressSession({
-    secret:'my key',
-    resave:true,
-    saveUninitialized:true
+    secret: 'my key',
+    resave: true,
+    saveUninitialized: true
 }));
 
+// 회원 목록
 const memberList = [
     {no:101, id:"user01", password:"1234", name:"홍길동", email:"hong@gmail.com"},
     {no:102, id:"user02", password:"12345", name:"김길동", email:"kim@gmail.com"},
@@ -31,6 +32,17 @@ const memberList = [
     {no:104, id:"user04", password:"1234567", name:"이길동", email:"lee@gmail.com"}
 ];
 let noCnt = 105;
+
+// 쇼핑몰 상품 목록
+const carList = [
+    {_id:101, name:'SM5', price:3000, year:1999, company:'SAMSUNG'},
+	{_id:102, name:'SM7', price:5000, year:2013, company:'SAMSUNG'},
+    {_id:103, name:'SONATA', price:3000, year:2023, company:'HYUNDAI'},
+	{_id:104, name:'GRANDEUR', price:4000, year:2022, company:'HYUNDAI'},
+    {_id:105, name:'BMW', price:6000, year:2019, company:'BMW'},
+    {_id:106, name:'SONATA', price:3200, year:2024, company:'HYUNDAI'}
+];
+let carSeq = 107;
 
 // 요청 라우팅 사용
 const router = express.Router();
@@ -140,8 +152,71 @@ router.route("/gallery").get((req, res) => {
 });
 
 // shop
-router.route("/shop").get((req, res) => {
-    req.app.render("shop/Shop", {}, (err, html)=>{
+router.route("/shop").get((req,res)=> {
+    req.app.render("shop/Shop", {carList}, (err, html)=>{
+        if(err) throw err;
+        res.end(html);
+    });
+});
+
+// shop-insert
+router.route("/shop/insert").get((req,res)=> {
+    req.app.render("shop/Insert", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+
+// shop-modify
+router.route("/shop/modify").get((req,res)=> {
+    const _id = parseInt(req.query._id);
+    console.log(_id)
+    const idx = carList.findIndex(car=>_id===car._id);
+    console.log(idx);
+    if(idx === -1) {
+        console.log("상품이 존재 하지 않습니다.")
+        res.redirect("/shop");
+        return;
+    }
+    req.app.render("shop/Modify", {car:carList[idx]}, (err, html)=>{
+        if(err) throw err;
+        res.end(html);
+    });
+});
+router.route("/shop/modify").post((req,res)=> {
+    console.log("POST - /shop/modify 호출");
+    console.dir(req.body);
+    res.redirect('/shop');
+});
+
+// shop-detail
+router.route("/shop/detail").get((req,res)=> {
+    // 쿼리로 전송된 데이터는 모두 문자열이다. 
+    // parseInt() 필수 "56" <-- numeric
+    const _id = parseInt(req.query._id);
+    console.log(_id)
+    const idx = carList.findIndex(car=>_id===car._id);
+    console.log(idx);
+    if(idx === -1) {
+        console.log("상품이 존재 하지 않습니다.")
+        res.redirect("/shop");
+        return;
+    }
+    req.app.render("shop/Detail", {car:carList[idx]}, (err, html)=>{
+        if(err) throw err;
+        res.end(html);
+    });
+});
+
+// shop-delete
+router.route("/shop/delete").get((req, res) => {
+    req.app.render("shop/Delete", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+
+// shop-cart
+router.route("/shop/cart").get((req, res) => {
+    req.app.render("shop/Cart", {}, (err, html)=>{
         res.end(html);
     });
 });
@@ -154,10 +229,10 @@ app.use('/', router);
 //     res.status(404).send('<h1>ERROR - 페이지를 찾을 수 없습니다.</h1>')
 // });
 
-//오류 핸들러 모듈 사용
+// 오류 핸들러 모듈 사용
 const expressErrorHandler = require('express-error-handler');
 
-//모든 라우터 처리 후 404 오류 페이지 처리
+// 모든 라우터 처리 후 404 오류 페이지 처리
 const errorHandler = expressErrorHandler({
     static : {
         '404':'./public/404.html'
