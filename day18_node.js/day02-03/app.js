@@ -5,11 +5,46 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressSession = require("express-session");
 
+// 파일 업로드용 미들웨어
+var multer = require('multer');
+var fs = require('fs');
+
+// multer 미들웨어 사용: 미들웨어 사용 순서 
+// body-parser -> multer -> router 순으로 실행
+var storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, 'uploads');
+    },
+    filename: function(req, file, callback) {
+        // 한글 파일명 깨짐 방지
+        const fileName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+        // 파일명 중복을 방지하기 위한 처리
+        // Date.now() <-- 타임스템프
+        let index = fileName .lastIndexOf(".");
+        let newFileName = fileName .substring(0, index);
+        newFileName += Date.now();
+        newFileName += fileName .substring(index);
+        callback(null, newFileName);
+    }
+});
+
+// 파일 제한: 10개, 1G 이하
+var upload = multer({
+    storage: storage,
+    limits: {
+        files: 10,
+        fileSize: 1024 * 1024 * 1024
+    }
+});
+
+
 app.set('port', 3000);
 app.set("views", "views");
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+app.use('/uploads', express.static("uploads"));
+
 // POST 방식으로 파라미터 전달 받기 위한 설정
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -35,14 +70,29 @@ let noCnt = 105;
 
 // 쇼핑몰 상품 목록
 const carList = [
-    {_id:101, name:'SM5', price:3000, year:1999, company:'SAMSUNG'},
-	{_id:102, name:'SM7', price:5000, year:2013, company:'SAMSUNG'},
-    {_id:103, name:'SONATA', price:3000, year:2023, company:'HYUNDAI'},
-	{_id:104, name:'GRANDEUR', price:4000, year:2022, company:'HYUNDAI'},
-    {_id:105, name:'BMW', price:6000, year:2019, company:'BMW'},
-    {_id:106, name:'SONATA', price:3200, year:2024, company:'HYUNDAI'}
+    {
+        _id:101, 
+        name:'SM5', 
+        price:3000, 
+        year:1999, 
+        company:'SAMSUNG',  
+        writedate:"",
+        photos: [
+            {
+                originalname:"Newsm5.jpg", 
+                filename:"Newsm5.jpg", 
+                filesize:371000, 
+                mimetype:"img/jpg"
+            }, {
+                originalname:"sm5.jpeg", 
+                filename:"sm5.jpeg", 
+                filesize:371000, 
+                mimetype:"img/jpeg"
+            }
+        ]
+    }
 ];
-let carSeq = 107;
+let carSeq = 102;
 
 // 요청 라우팅 사용
 const router = express.Router();
@@ -166,6 +216,22 @@ router.route("/shop/insert").get((req,res)=> {
     });
 });
 
+// 파일 업로드 기능 추가
+router.route("/shop/insert").post(upload.array('photo', 1),(req,res)=> {
+    console.log("POST - /shop/insert");
+    // 구조분해 할당으로 body의 파라미터를 꺼낸다.
+    const {name, price, year, company} = req.body;
+    const newCar = {
+        _id:carSeq++, name, price, year, company,
+        writedate: Date.now(),
+        photos: []
+    };
+    newCar.photos = req.files;
+    carList.push(newCar);
+    // res.send(carList);
+    res.redirect('/shop');
+});
+
 // shop-modify
 router.route("/shop/modify").get((req,res)=> {
     const _id = parseInt(req.query._id);
@@ -193,9 +259,9 @@ router.route("/shop/detail").get((req,res)=> {
     // 쿼리로 전송된 데이터는 모두 문자열이다. 
     // parseInt() 필수 "56" <-- numeric
     const _id = parseInt(req.query._id);
-    console.log(_id)
+    // console.log(_id)
     const idx = carList.findIndex(car=>_id===car._id);
-    console.log(idx);
+    // console.log(idx);
     if(idx === -1) {
         console.log("상품이 존재 하지 않습니다.")
         res.redirect("/shop");
