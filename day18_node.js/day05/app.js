@@ -201,6 +201,13 @@ router.route("/gallery").get((req, res) => {
     });
 });
 
+// todolist
+router.route("/todolist").get((req, res) => {
+    req.app.render("todolist/TodoList", {}, (err, html)=>{
+        res.end(html);
+    });
+});
+
 // shop
 router.route("/shop").get((req,res)=> {
     req.app.render("shop/Shop", {carList}, (err, html)=>{
