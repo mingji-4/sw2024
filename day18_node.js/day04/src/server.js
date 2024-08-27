@@ -1,45 +1,73 @@
+const http = require("http");
+const express = require("express");
+const app = express();
 const { MongoClient } = require("mongodb");
+const path = require("path");
+const bodyParser = require("body-parser");
 
-// Replace the uri string with your MongoDB deployment's connection string.
+app.set('port', 3000);
+app.set("views", path.join(__dirname, "../views"));
+app.set("view engine", "ejs");
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use("/", express.static(path.join(__dirname, "../public")) );
+
 const uri = "mongodb://localhost:27017";
-
 const client = new MongoClient(uri);
 const dbName = "vehicle";
 const collectionName = "car";
 
-async function run() {
+app.get("/car", async (req, res) => {
   try {
-    
-    // Get the database and collection on which to run the operation
+    client.connect();
     const database = client.db(dbName);
     const cars = database.collection(collectionName);
-
-    // Query for movies that have a runtime less than 15 minutes
     const query = {};
-
     const options = {
-      // Sort returned documents in ascending order by title (A->Z)
       sort: { name: 1 },
-      // Include only the `title` and `imdb` fields in each returned document
-      projection: { _id: 0, name: 1, company: 1 },
+      //projection: { _id:true, name:1, company:1, price:1, year:1 }
+      projection: {}
     };
-
-    // Execute query 
     const cursor = cars.find(query, options);
-
-    // Print a message if no documents were found
     if ((await cars.countDocuments(query)) === 0) {
       console.log("No documents found!");
     }
-
-    // Print returned documents
+    const carList = [];
     for await (const doc of cursor) {
+      carList.push(doc);
       console.dir(doc);
     }
-
+    req.app.render("CarList", {carList}, (err, html)=>{
+      res.end(html);
+    });
   } finally {
     await client.close();
   }
-}
+});
 
-run().catch(console.dir);
+app.post("/car", async (req, res)=> {
+  try {
+    client.connect();
+    const database = client.db(dbName);
+    const cars = database.collection(collectionName);
+    const doc = {
+      name: req.body.name,
+      price: req.body.price,
+      company: req.body.company,
+      year: req.body.year
+    }
+    const result = await cars.insertOne(doc);
+    console.log(`A document was inserted with the _id: ${result.insertedId}`);
+    res.redirect("/car");
+  } finally {
+    await client.close();
+  }
+});
+
+
+
+const server = http.createServer(app);
+server.listen(app.get('port'), ()=>{
+  console.log(`서버 실행 중 >>> http://localhost:${app.get('port')}`);
+})
