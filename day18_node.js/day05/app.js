@@ -117,13 +117,14 @@ router.route("/profile").get((req, res) => {
     });
 });
 
-// member
+// ------- member -------
 router.route("/member").get((req, res) => {
     // 로그인이 되어 있다면 member 페이지를 보여줌
     // 쿠키는 사용자쪽에 전달(res), 세션은 요청이 들어올 때 생성(req)
     if (req.session.user !== undefined) {
         const user = req.session.user;
-        req.app.render("member/Member", { user }, (err, html) => {
+        req.app.render("member/Member", { user, memberList }, (err, html) => {
+            if (err) throw err;
             res.end(html);
         });
     } else {
@@ -134,33 +135,27 @@ router.route("/member").get((req, res) => {
 // -------- login -------- 
 router.route("/login").get((req, res) => {
     req.app.render("member/Login", {}, (err, html) => {
-        // 사용자(접속자)의 로컬에 쿠키가 저장됨
-        res.cookie('user', {
-            id: 'TestUser',
-            name: '테스트 유저',
-            authorized: true
-        });
+        if (err) throw err;
         res.end(html);
     });
 });
 
 router.route("/login").post((req, res) => {
-    console.log(req.body.id, req.body.password);
-    const idx = memberList.findIndex(member => member.id === req.body.id);
-    if (idx != -1) {
-        if (memberList[idx].password === req.body.password) {
-            console.log("로그인 성공!");
-            // 세션에 로그인 정보를 등록 후 멤버 페이지로 이동
+    const { id, password } = req.body;
+    const idx = memberList.findIndex(member => member.id === id);
+
+    if (idx !== -1) {
+        if (memberList[idx].password === password) {
+            // 로그인 성공, 세션에 사용자 정보 저장
             req.session.user = {
-                id: req.body.id,
+                id: memberList[idx].id,
                 name: memberList[idx].name,
                 email: memberList[idx].email,
                 no: memberList[idx].no
-            }
+            };
             res.redirect("/member");
         } else {
             console.log("로그인 실패! 패스워드가 맞지 않습니다");
-            // 다시 로그인 페이지로 이동
             res.redirect("/login");
         }
     } else {
@@ -170,28 +165,42 @@ router.route("/login").post((req, res) => {
 });
 
 // -------- logout -------- 
-app.get('/logout', (req, res) => {
-    if (req.session.user) {
-        req.session.destroy(err => {
-            if (err) throw err;
-            res.redirect('/login');
-        });
-    } else {
-        res.redirect('/login');
-    }
+router.route("/logout").get((req, res) => {
+    // 세션에서 사용자 정보 제거
+    req.session.destroy((err) => {
+        if (err) {
+            console.log("로그아웃 실패:", err);
+            return res.redirect("/member");
+        }
+        res.redirect("/login");
+    });
 });
 
 // -------- joinus -------- 
 router.route("/joinus").get((req, res) => {
-    // 회원 가입 ejs 페이지 forward
     req.app.render("member/Joinus", {}, (err, html) => {
+        if (err) throw err;
         res.end(html);
     });
 });
 
 router.route("/joinus").post((req, res) => {
-    // 회원 가입 처리 후 목록으로 갱신
-    res.redirect("/member");
+    const { id, name, email, password } = req.body;
+        console.log("회원가입 요청 데이터:", req.body);
+        if (memberList.find(member => member.id === id)) {
+            console.log("이미 존재하는 ID입니다.");
+            return res.redirect("/joinus");
+        }
+        const newMember = {
+            no: noCnt++,
+            id,       
+            name,
+            email,
+            password
+        };
+        memberList.push(newMember);
+        console.log("새 멤버가 추가되었습니다:", newMember);
+        res.redirect("/member");
 });
 
 // gallery
@@ -393,11 +402,28 @@ router.route("/shop/modify").get((req, res) => {
         res.end(html);
     });
 });
-router.route("/shop/modify").post((req, res) => {
-    console.log("POST - /shop/modify 호출");
-    console.dir(req.body);
-    res.redirect('/shop');
+router.route("/shop/modify").post(upload.single('image'), (req, res) => {
+    const _id = parseInt(req.body._id);
+    const idx = carList.findIndex(car => _id === car._id);
+
+    if (idx === -1) {
+        console.log("상품이 존재하지 않습니다.");
+        res.redirect("/shop");
+        return;
+    }
+    carList[idx].name = req.body.name;
+    carList[idx].price = parseInt(req.body.price);
+    carList[idx].year = req.body.year;
+    carList[idx].company = req.body.company;
+
+    if (req.file) {
+        carList[idx].image = req.file.filename;
+    }
+    console.log(`상품 ID: ${_id}이(가) 수정되었습니다.`);
+    console.dir(carList[idx]);
+    res.redirect("/shop");
 });
+
 
 // shop-detail
 router.route("/shop/detail").get((req, res) => {
@@ -420,9 +446,16 @@ router.route("/shop/detail").get((req, res) => {
 
 // shop-delete
 router.route("/shop/delete").get((req, res) => {
-    req.app.render("shop/Delete", {}, (err, html) => {
-        res.end(html);
-    });
+    const _id = parseInt(req.query._id);
+    const idx = carList.findIndex(car => _id === car._id);
+    if (idx === -1) {
+        console.log("삭제할 상품이 존재하지 않습니다.");
+        res.redirect("/shop");
+        return;
+    }
+    carList.splice(idx, 1);
+    console.log(`상품 ID: ${_id}이(가) 삭제되었습니다.`);
+    res.redirect("/shop");
 });
 
 // shop-cart
@@ -431,8 +464,6 @@ router.route("/shop/cart").get((req, res) => {
         res.end(html);
     });
 });
-
-
 
 // router 설정 맨 아래에 미들웨어 등록
 app.use('/', router);

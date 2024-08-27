@@ -11,20 +11,31 @@
     <div class="container">
         <h2>Member</h2>
         <p>
-            <%= user.name %>님 반갑습니다!(<%= user.email %>)
+            <%= user.name %>님 반갑습니다!(<%= user.id %>)
             <a href="/logout">Logout</a>
         </p>
         <table class="table">
-            <tr>
-                <th>NO</th>
-                <th>NAME</th>
-                <th>EMAIL</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>홍길동</td>
-                <td>hong@gmail.com</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>ID</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% memberList.forEach(member => {
+                %>
+                    <tr>
+                        <td><%= member.no %></td>
+                        <td><%= member.id %></td>
+                        <td><%= member.name %></td>
+                        <td><%= member.email %></td>
+                    </tr>
+                <%
+                });
+                %>
+            </tbody>
         </table>
     </div>
 </body>
