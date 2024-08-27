@@ -170,20 +170,15 @@ router.route("/login").post((req, res) => {
 });
 
 // -------- logout -------- 
-router.route("/logout").get((req, res) => {
-    console.log("GET - /logout 호출...");
-    // 로그인이 된 상태라면 로그아웃
-    if (!req.session.yser) {
-        console.log("로그인 전 상태입니다");
-        res.redirect("/login");
-        return;
+app.get('/logout', (req, res) => {
+    if (req.session.user) {
+        req.session.destroy(err => {
+            if (err) throw err;
+            res.redirect('/login');
+        });
+    } else {
+        res.redirect('/login');
     }
-    // 세션의 user 정보를 제거해서 logout 처리
-    req.session.destroy((err) => {
-        if (err) throw err;
-        console.log("로그아웃 성공");
-        res.redirect("/login");
-    });
 });
 
 // -------- joinus -------- 
