@@ -97,6 +97,11 @@ let carSeq = 102;
 // 요청 라우팅 사용
 const router = express.Router();
 
+// HTML 폼에서 REST method는 GET와 POST만 사용 가능
+// Ajax를 사용하지 않기 때문에 GET와 POST만 처리 가능
+// app.get()은 ejs 뷰로 forward 시켜주기 (목록 출력)
+// app.post()는 DB와 연동해서 처리하는 process 역할 (목록 저장)
+// forward란, 주소의 내용이 아닌 다른 파일의 내용 표시
 
 // home
 router.route("/home").get((req, res) => {
@@ -126,7 +131,7 @@ router.route("/member").get((req, res) => {
     }
 });
 
-// login
+// -------- login -------- 
 router.route("/login").get((req, res) => {
     req.app.render("member/Login", {}, (err, html)=>{
         // 사용자(접속자)의 로컬에 쿠키가 저장됨
@@ -164,7 +169,7 @@ router.route("/login").post((req, res) => {
     }
 });
 
-// logout
+// -------- logout -------- 
 router.route("/logout").get((req, res) => {
     console.log("GET - /logout 호출...");
     // 로그인이 된 상태라면 로그아웃
@@ -181,7 +186,7 @@ router.route("/logout").get((req, res) => {
     });
 });
 
-// joinus
+// -------- joinus -------- 
 router.route("/joinus").get((req, res) => {
     // 회원 가입 ejs 페이지 forward
     req.app.render("member/Joinus", {}, (err, html)=>{
@@ -201,14 +206,53 @@ router.route("/gallery").get((req, res) => {
     });
 });
 
-// todolist
-router.route("/todolist").get((req, res) => {
-    req.app.render("todolist/TodoList", {}, (err, html)=>{
-        res.end(html);
-    });
+// -------- todolist -------- 
+const todoList = [
+    {_id:101, title:"밥먹기", done:false},
+    {_id:102, title:"잠자기", done:false},
+    {_id:103, title:"공부하기", done:false},
+    {_id:104, title:"친구랑 놀기", done:false}
+];
+let todoCnt = 105;
+
+app.get("/todo/list", (req,res)=>{
+    res.render("todolist/TodoList", {todoList});
 });
 
-// shop
+// input
+app.get("/todo/input", (req, res) => {
+    res.render("todolist/TodoInput", {});
+});
+
+// detail
+app.get("/todo/detail", (req, res) => {
+    res.render("todolist/TodoDetail", {});
+});
+
+// modify
+app.get("/todo/modify", (req, res) => {
+    res.render("todolist/TodoModify", {});
+});
+
+// 저장처리 - 몽고디비와 연동
+app.post("/todo/input", (req, res) => {
+    res.redirect("todo/list");
+});
+
+app.post("/todo/detail", (req, res) => {
+    res.redirect("todo/list");
+});
+
+app.post("/todo/modify", (req, res) => {
+    res.redirect("todo/list");
+});
+
+app.get("/todo/delete", (req, res) => {
+    res.redirect("todo/list");
+});
+
+
+// -------- shop -------- 
 router.route("/shop").get((req,res)=> {
     req.app.render("shop/Shop", {carList}, (err, html)=>{
         if(err) throw err;
@@ -293,6 +337,8 @@ router.route("/shop/cart").get((req, res) => {
         res.end(html);
     });
 });
+
+
 
 // router 설정 맨 아래에 미들웨어 등록
 app.use('/', router);
