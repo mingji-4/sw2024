@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Memo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10pxgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+            margin-left: 10px;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-around;
+        }
+        .new-memo {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .new-memo:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Memo Home</h1>
+        <nav>
+            <ul>
+                <li th:each="memo : ${memos}">
+                    <span th:text="${memo.content}"></span>
+                    <div class="actions">
+                        <a th:href="@{/edit/{id}(id=${memo.id})}">Edit</a>
+                        <a th:href="@{/delete/{id}(id=${memo.id})}" style="color: red;">Delete</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <a href="/form" class="new-memo">New Memo</a>
+    </div>
+</body>
+</html>
