@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: myapp
+server:
+  port: 8888
+  servlet:
+    context-path: /myapp
